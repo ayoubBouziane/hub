@@ -16,6 +16,7 @@
 
 This library provides the major pieces for make_image_classifier (see there).
 """
+import os
 from datetime import date
 import collections
 import contextlib
