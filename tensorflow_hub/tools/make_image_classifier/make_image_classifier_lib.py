@@ -52,7 +52,7 @@ class HParams(
         "momentum", "dropout_rate", "l1_regularizer", "l2_regularizer",
         "label_smoothing", "validation_split", "do_data_augmentation",
         "rotation_range", "horizontal_flip", "width_shift_range",
-        "height_shift_range", "shear_range", "zoom_range"
+        "height_shift_range", "shear_range", "zoom_range", "model_dir"
     ])):
   """The hyperparameters for make_image_classifier.
 
