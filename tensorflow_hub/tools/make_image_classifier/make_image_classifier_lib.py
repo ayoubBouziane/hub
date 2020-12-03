@@ -261,6 +261,7 @@ def train_model(model, hparams, train_data_and_size, valid_data_and_size,
   ##################################################################################
   # callBacks tools.
   
+  print("hparams.hub_model_dir : ", hparams.hub_model_dir)
   today = date.today().strftime("%d-%m-%Y")
   checkpoint_dir = os.path.join(hparams.hub_model_dir, 'checkpoint')
   backup_dir = os.path.join(hparams.hub_model_dir, 'tmp/backup')
