@@ -85,7 +85,8 @@ def get_default_hparams():
       width_shift_range=0.2,
       height_shift_range=0.2,
       shear_range=0.2,
-      zoom_range=0.2)
+      zoom_range=0.2,
+      model_dir="")
 
 
 def _get_data_with_keras(image_dir, image_size, batch_size, validation_split,
