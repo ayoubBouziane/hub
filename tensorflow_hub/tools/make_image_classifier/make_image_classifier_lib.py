@@ -254,25 +254,37 @@ def train_model(model, hparams, train_data_and_size, valid_data_and_size,
       loss=loss,
       metrics=["accuracy"])
   steps_per_epoch = train_size // hparams.batch_size
-  validation_steps = valid_size // hparams.batch_size
-  callbacks = []
+  validation_steps = valid_size // hparams.batch_size  
+  
   ##################################################################################
-    # callBacks tools.
+  # callBacks tools.
+  
   today = date.today().strftime("%d-%m-%Y")
-  base_dir = "/content/"
-  if not os.path.exists(base_dir+'Checkpoint'):
-    os.makedirs(base_dir+'Checkpoint')
-    print("Checkpoint folder created !")
-  if not os.path.exists(base_dir+'Checkpoint/tmp/backup'):
-    os.makedirs(base_dir+'Checkpoint/tmp/backup')
-    print("backup folder created !")
+  checkpoint_dir = os.path.join(hparams.model_dir, 'checkpoint')
+  backup_dir = os.path.join(hparams.model_dir, 'tmp/backup')
+  summary_dir = os.path.join(hparams.model_dir, "summaries")
+
+  if not os.path.exists(checkpoint_dir):
+    os.makedirs(checkpoint_dir)
+    print("Checkpoint folder created at : ", checkpoint_dir)
+  if not os.path.exists(backup_dir):
+    os.makedirs(backup_dir)
+    print("backup folder created at : ", backup_dir)
+  if not os.path.exists(summary_dir):
+    os.makedirs(summary_dir)
+    print("summary folder created at : ", summary_dir)
+    
   # callBacks.
   summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
-  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=base_dir+'Checkpoint/Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5', monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
-  backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=base_dir+'Checkpoint/tmp/backup')
+  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(checkpoint_dir, 'model_weights@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5'), monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = True)
+  backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=backup_dir)
   earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
+
   callbacks=[summary_callback, checkpoint_callback, earlystopping, backupAndRestore]
+
   ##################################################################################
+
+  
   if log_dir != None:
     callbacks.append(tf.keras.callbacks.TensorBoard(log_dir=log_dir,
                                                     histogram_freq=1))
