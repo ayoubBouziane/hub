@@ -16,7 +16,7 @@
 
 This library provides the major pieces for make_image_classifier (see there).
 """
-
+from datetime import date
 import collections
 import contextlib
 
@@ -256,6 +256,18 @@ def train_model(model, hparams, train_data_and_size, valid_data_and_size,
   steps_per_epoch = train_size // hparams.batch_size
   validation_steps = valid_size // hparams.batch_size
   callbacks = []
+    # callBacks tools.
+  today = date.today().strftime("%d-%m-%Y")
+  if not os.path.exists('Checkpoint'):
+    os.makedirs('Checkpoint')
+  if not os.path.exists('Checkpoint/tmp/backup'):
+    os.makedirs('Checkpoint/tmp/backup')
+  # callBacks.
+  summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
+  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath='Checkpoint'+'/Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5', monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
+  backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir='Checkpoint/tmp/backup')
+  earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
+  
   if log_dir != None:
     callbacks.append(tf.keras.callbacks.TensorBoard(log_dir=log_dir,
                                                     histogram_freq=1))
