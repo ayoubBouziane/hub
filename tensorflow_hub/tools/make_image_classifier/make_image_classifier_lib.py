@@ -52,7 +52,7 @@ class HParams(
         "momentum", "dropout_rate", "l1_regularizer", "l2_regularizer",
         "label_smoothing", "validation_split", "do_data_augmentation",
         "rotation_range", "horizontal_flip", "width_shift_range",
-        "height_shift_range", "shear_range", "zoom_range", "model_dir"
+        "height_shift_range", "shear_range", "zoom_range", "hub_model_dir"
     ])):
   """The hyperparameters for make_image_classifier.
 
@@ -86,7 +86,7 @@ def get_default_hparams():
       height_shift_range=0.2,
       shear_range=0.2,
       zoom_range=0.2,
-      model_dir="")
+      hub_model_dir="")
 
 
 def _get_data_with_keras(image_dir, image_size, batch_size, validation_split,
@@ -261,9 +261,9 @@ def train_model(model, hparams, train_data_and_size, valid_data_and_size,
   # callBacks tools.
   
   today = date.today().strftime("%d-%m-%Y")
-  checkpoint_dir = os.path.join(hparams.model_dir, 'checkpoint')
-  backup_dir = os.path.join(hparams.model_dir, 'tmp/backup')
-  summary_dir = os.path.join(hparams.model_dir, "summaries")
+  checkpoint_dir = os.path.join(hparams.hub_model_dir, 'checkpoint')
+  backup_dir = os.path.join(hparams.hub_model_dir, 'tmp/backup')
+  summary_dir = os.path.join(hparams.hub_model_dir, "summaries")
 
   if not os.path.exists(checkpoint_dir):
     os.makedirs(checkpoint_dir)
